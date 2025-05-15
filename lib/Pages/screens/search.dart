@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:soomar_clone/colors.dart';
+import '../../utils/colors.dart';
+import 'package:soomar_clone/components/buttons/custom_cricle_button.dart';
+import 'package:soomar_clone/Pages/screens/cart_page.dart';
+import 'package:soomar_clone/Pages/screens/notifications_page.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -9,120 +12,156 @@ class SearchPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.accentColor,
-        appBar: AppBar(
-          title: const Text('Search'),
-          backgroundColor: AppColors.accentColor,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Material(
+            elevation: 5,
+            shadowColor: Colors.black45,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: AppColors.accentColor,
+                border: Border(
+                  bottom: BorderSide(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    width: 0,
+                  ),
+                ),
+              ),
+              child: AppBar(
+                title: const Text('Search'),
+                backgroundColor: Colors.transparent,
+                foregroundColor: Colors.black,
+                elevation: 0,
+              ),
+            ),
+          ),
         ),
-        body: Column(
-          children: [
-            Container(
-              color: AppColors.secondaryColor,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
+        body: CustomScrollView(
+          slivers: [
+            // 🔹 Static content as sliver
+            SliverToBoxAdapter(
+              child: Container(
+                color: AppColors.secondaryColor,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                    // Top Row: Logo and Icons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image.asset(
+                          'assets/images/soomarlogo.png',
+                          width: 150,
+                          height: 70,
                           color: AppColors.accentColor,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.image_not_supported,
+                              color: AppColors.accentColor,
+                            );
+                          },
                         ),
-                        padding: const EdgeInsets.all(15.0),
-                        child: Icon(
-                          Icons.qr_code,
-                          color: AppColors.secondaryColor,
+                        Row(
+                          children: [
+                            CustomCircularIconButton(
+                              icon: Icons.notifications,
+                              iconColor: AppColors.mainColor,
+                              backgroundColor: Colors.white,
+                              context: context,
+                              navigateTo: const NotificationsPage(),
+                            ),
+                            const SizedBox(width: 8),
+                            CustomCircularIconButton(
+                              icon: Icons.shopping_cart,
+                              iconColor: AppColors.mainColor,
+                              backgroundColor: Colors.white,
+                              context: context,
+                              navigateTo: const CartPage(),
+                            ),
+                          ],
                         ),
-                      ),
-                      onPressed: () {
-                        // Add QR code action
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Search Bar
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SearchPage(),
+                          ),
+                        );
                       },
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 20,
-                          ),
-                          filled: true,
-                          fillColor: AppColors.accentColor,
-                          hintText: 'SEARCH PRODUCTS',
-                          hintStyle: TextStyle(
-                            color: AppColors.secondaryColor,
-                            fontSize: 16,
-                            shadows: [], // Removed text dropshadow
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            borderSide: BorderSide.none,
-                          ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    IconButton(
-                      icon: Container(
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
                           color: AppColors.accentColor,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.white24),
                         ),
-                        padding: const EdgeInsets.all(15.0),
-                        child: const Icon(
-                          Icons.shopping_cart,
-                          color: AppColors.secondaryColor,
+                        child: Row(
+                          children: const [
+                            Icon(Icons.search, color: Colors.black45),
+                            SizedBox(width: 8),
+                            Text(
+                              'Search Product here',
+                              style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      onPressed: () {
-                        // Add shopping cart action
-                      },
                     ),
                   ],
                 ),
               ),
             ),
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(10.0),
+
+            // 🔹 Product Grid inside a sliver
+            SliverPadding(
+              padding: const EdgeInsets.all(10),
+              sliver: SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.secondaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.image, size: 50, color: AppColors.mainColor),
+                        const SizedBox(height: 5),
+                        Text(
+                          'Product ${index + 1}',
+                          style: TextStyle(
+                            color: AppColors.mainColor,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  childCount: 40,
+                ),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 1,
                 ),
-                itemCount: 40, // Example product count
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      // Add product click action
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.secondaryColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.image,
-                            size: 50,
-                            color: AppColors.mainColor,
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            'Product ${index + 1}',
-                            style: TextStyle(
-                              color: AppColors.mainColor,
-                              fontSize: 14,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
               ),
             ),
           ],

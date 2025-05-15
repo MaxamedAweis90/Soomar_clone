@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:soomar_clone/Pages/home.dart';
+import 'package:soomar_clone/RootLayout.dart';
 
-import 'colors.dart';
+import '../utils/colors.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -29,7 +29,7 @@ class StartPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => RootLayout()),
                 );
               },
               child: const Text(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:soomar_clone/Pages/screens/search.dart';
-import 'package:soomar_clone/colors.dart';
-import 'package:card_swiper/card_swiper.dart';
+import '../../utils/colors.dart';
+import 'package:soomar_clone/components/buttons/custom_cricle_button.dart';
+import 'package:soomar_clone/Pages/screens/cart_page.dart';
+import 'package:soomar_clone/Pages/screens/notifications_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,179 +17,234 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Section 1: QR button, search bar, and shopping cart icon
+              // Top Bar: Logo, Title and Action Buttons
               Container(
-                color: AppColors.secondaryColor, // Set background color
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.accentColor,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              child: Icon(
-                                Icons.qr_code,
-                                color: AppColors.secondaryColor,
-                              ),
-                            ),
-                            onPressed: () {
-                              // Add QR code action
-                            },
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              readOnly:
-                                  true, // Makes the TextField non-editable
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SearchPage(),
-                                  ),
+                color: AppColors.secondaryColor,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Top Row: Logo and Icons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            // Logo Image (safe load)
+                            Image.asset(
+                              'assets/images/soomarlogo.png',
+                              width: 150,
+                              height: 70,
+                              color: AppColors.accentColor,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.image_not_supported,
+                                  color: AppColors.accentColor,
                                 );
                               },
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 20,
-                                ),
-                                filled: true,
-                                fillColor: AppColors.accentColor,
-                                hintText: 'SEARCH PRODUCTS',
-                                hintStyle: TextStyle(
-                                  color: AppColors.secondaryColor,
-                                  fontSize: 16,
-                                  shadows: [], // Removed text dropshadow
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          IconButton(
-                            icon: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.accentColor,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              child: const Icon(
-                                Icons.shopping_cart,
-                                color: AppColors.secondaryColor,
-                              ),
+
+                            const SizedBox(width: 8),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            CustomCircularIconButton(
+                              icon: Icons.notifications,
+                              iconColor: AppColors.mainColor,
+                              backgroundColor: Colors.white,
+                              context: context,
+                              navigateTo: const NotificationsPage(),
                             ),
-                            onPressed: () {
-                              // Add shopping cart action
-                            },
+                            const SizedBox(width: 8),
+                            CustomCircularIconButton(
+                              icon: Icons.shopping_cart,
+                              iconColor: AppColors.mainColor,
+                              backgroundColor: Colors.white,
+                              context: context,
+                              navigateTo: const CartPage(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Search Bar Row
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SearchPage(),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        'Welcome to Soomar!',
-                        style: const TextStyle(
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
                           color: AppColors.accentColor,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.white24,
+                          ), // Optional border for visibility
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 15),
-
-              // Section 2: Sliding cards with Swiper
-              SizedBox(
-                height: 200,
-                child: Swiper(
-                  itemCount: 5,
-                  autoplay: true,
-                  autoplayDelay: 2000,
-                  loop: true,
-                  scale: 0.9,
-                  viewportFraction: 0.8,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 1),
-                      decoration: BoxDecoration(
-                        color: AppColors.secondaryColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Card ${index + 1}',
-                          style: const TextStyle(color: Colors.white),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: const [
+                            Icon(Icons.search, color: Colors.black45),
+                            SizedBox(width: 8),
+                            Text(
+                              'Search Product here',
+                              style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
               ),
 
-              // Section 3: Categories (3x3 grid)
+              const SizedBox(height: 20),
+
+              // Categories Section
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GridView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'Categories',
+                      style: TextStyle(
+                        color: AppColors.accentColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'View All',
+                      style: TextStyle(
+                        color: AppColors.accentColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: GridView.count(
+                  crossAxisCount: 4,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: 9,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.secondaryColor,
-                        borderRadius: BorderRadius.circular(10),
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  children: List.generate(8, (index) {
+                    return Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.secondaryColor,
+                          ),
+                          padding: const EdgeInsets.all(12),
+                          child: Icon(
+                            Icons.category,
+                            color: AppColors.accentColor,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Cat ${index + 1}',
+                          style: const TextStyle(color: AppColors.accentColor),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Hot Deals Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'Hot Deals',
+                      style: TextStyle(
+                        color: AppColors.accentColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: Center(
-                        child: Text(
-                          'Category ${index + 1}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'View All',
+                      style: TextStyle(
+                        color: AppColors.accentColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(2, (index) {
+                    return Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          right: index == 0 ? 8 : 0,
+                          left: index == 1 ? 8 : 0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            'https://via.placeholder.com/150',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey,
+                                alignment: Alignment.center,
+                                child: const Icon(
+                                  Icons.broken_image,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     );
-                  },
+                  }),
                 ),
               ),
+
+              const SizedBox(height: 20),
             ],
           ),
-        ),
-
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: 0, // Home is active
-          onTap: (index) {
-            // Handle navigation
-          },
-          type: BottomNavigationBarType.fixed, // Ensures all items fit
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'History',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.support),
-              label: 'Support',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          ],
         ),
       ),
     );
