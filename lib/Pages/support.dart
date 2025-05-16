@@ -7,7 +7,7 @@ class SupportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.accentColor,
+      backgroundColor: const Color.fromARGB(255, 237, 243, 247),
       body: Column(
         children: [
           // Banner with logo

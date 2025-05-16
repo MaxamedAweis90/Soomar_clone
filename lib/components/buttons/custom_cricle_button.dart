@@ -24,7 +24,7 @@ class CustomCircularIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(0.2),
       child: IconButton(
         icon: Icon(icon, color: iconColor, size: size),
         onPressed: () {

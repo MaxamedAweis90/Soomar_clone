@@ -1,15 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:soomar_clone/Pages/screens/search.dart';
-import '../../utils/colors.dart';
-import 'package:soomar_clone/components/buttons/custom_cricle_button.dart';
 import 'package:soomar_clone/Pages/screens/cart_page.dart';
 import 'package:soomar_clone/Pages/screens/notifications_page.dart';
+import 'package:soomar_clone/utils/colors.dart';
+import 'package:soomar_clone/components/buttons/custom_cricle_button.dart';
+import 'package:soomar_clone/components/category_circle.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Categories with network image URLs
+    final List<Map<String, String>> categories = [
+      {'label': 'Internet', 'image': 'assets/images/wifi.png'},
+      {'label': 'Electronic', 'image': 'assets/images/watch.png'},
+      {'label': 'Home kitchen', 'image': 'assets/images/Kitchen.png'},
+      {
+        'label': 'Cosmatics',
+        'image': 'https://cdn-icons-png.flaticon.com/512/3075/3075977.png',
+      },
+      {
+        'label': 'Fashion',
+        'image': 'https://cdn-icons-png.flaticon.com/512/135/135701.png',
+      },
+      {
+        'label': 'Jirdhis',
+        'image': 'https://cdn-icons-png.flaticon.com/512/1046/1046753.png',
+      },
+      {
+        'label': 'Caruur',
+        'image': 'https://cdn-icons-png.flaticon.com/512/947/947978.png',
+      },
+      {
+        'label': 'Supplements',
+        'image': 'https://cdn-icons-png.flaticon.com/512/1828/1828919.png',
+      },
+    ];
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.accentColor,
@@ -17,7 +45,7 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Bar: Logo, Title and Action Buttons
+              // Top Bar
               Container(
                 color: AppColors.secondaryColor,
                 padding: const EdgeInsets.symmetric(
@@ -27,28 +55,21 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Top Row: Logo and Icons
+                    // Logo and Icons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            // Logo Image (safe load)
-                            Image.asset(
-                              'assets/images/soomarlogo.png',
-                              width: 150,
-                              height: 70,
+                        Image.asset(
+                          'assets/images/soomarlogo.png',
+                          width: 150,
+                          height: 70,
+                          color: AppColors.accentColor,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.image_not_supported,
                               color: AppColors.accentColor,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.image_not_supported,
-                                  color: AppColors.accentColor,
-                                );
-                              },
-                            ),
-
-                            const SizedBox(width: 8),
-                          ],
+                            );
+                          },
                         ),
                         Row(
                           children: [
@@ -71,10 +92,9 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 12),
 
-                    // Search Bar Row
+                    // Search Bar
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -92,12 +112,9 @@ class HomePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: AppColors.accentColor,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.white24,
-                          ), // Optional border for visibility
+                          border: Border.all(color: Colors.white24),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: const [
                             Icon(Icons.search, color: Colors.black45),
                             SizedBox(width: 8),
@@ -118,7 +135,7 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // Categories Section
+              // Categories Title
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -127,7 +144,7 @@ class HomePage extends StatelessWidget {
                     Text(
                       'Categories',
                       style: TextStyle(
-                        color: AppColors.accentColor,
+                        color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -135,14 +152,17 @@ class HomePage extends StatelessWidget {
                     Text(
                       'View All',
                       style: TextStyle(
-                        color: AppColors.accentColor,
-                        fontSize: 16,
+                        color: AppColors.secondaryColor,
+                        fontSize: 20,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 12),
+
+              // Categories Grid
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: GridView.count(
@@ -151,34 +171,22 @@ class HomePage extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
-                  children: List.generate(8, (index) {
-                    return Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.secondaryColor,
-                          ),
-                          padding: const EdgeInsets.all(12),
-                          child: Icon(
-                            Icons.category,
-                            color: AppColors.accentColor,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Cat ${index + 1}',
-                          style: const TextStyle(color: AppColors.accentColor),
-                        ),
-                      ],
-                    );
-                  }),
+                  children:
+                      categories.map((category) {
+                        return CategoryCircle(
+                          label: category['label']!,
+                          imageUrl: category['image']!,
+                          onTap: () {
+                            debugPrint('Tapped on ${category['label']}');
+                          },
+                        );
+                      }).toList(),
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              // Hot Deals Section
+              // Hot Deals Title
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -187,7 +195,7 @@ class HomePage extends StatelessWidget {
                     Text(
                       'Hot Deals',
                       style: TextStyle(
-                        color: AppColors.accentColor,
+                        color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -195,14 +203,17 @@ class HomePage extends StatelessWidget {
                     Text(
                       'View All',
                       style: TextStyle(
-                        color: AppColors.accentColor,
-                        fontSize: 16,
+                        color: AppColors.secondaryColor,
+                        decoration: TextDecoration.underline,
+                        fontSize: 20,
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 12),
+
+              // Hot Deal Images
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -241,7 +252,6 @@ class HomePage extends StatelessWidget {
                   }),
                 ),
               ),
-
               const SizedBox(height: 20),
             ],
           ),
